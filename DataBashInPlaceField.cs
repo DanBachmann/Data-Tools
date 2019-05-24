@@ -54,19 +54,20 @@ namespace DataBash
             int currentColumn = 0, row=0;
             foreach (char c in input)
             {
+                bool inEOL = EOL.Contains(c.ToString());
                 if (c == quote)
                 {
                     inQuote = !inQuote;
                     thisField += c;
                 }
-                else if ((c == divider[0]||c==EOL[0]) && !inQuote)
+                else if ((c == divider[0]||inEOL) && !inQuote)
                 {
                     // end field/column
                     string newText = row<startRow ? thisField : ReturnBashedText(currentColumn, thisField);
                     output += newText + c;
                     thisField = string.Empty;
-                    currentColumn = c == EOL[0] ? 0 : currentColumn + 1;
-                    if (c == EOL[0])
+                    currentColumn = inEOL ? 0 : currentColumn + 1;
+                    if (inEOL)
                     {
                         // advance row count
                         row++;
